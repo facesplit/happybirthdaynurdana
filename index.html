@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f4d9c6" />
+    <title>Наш год под деревом — Нурдане</title>
+    <meta name="description" content="Поздравление с днём рождения для Нурданы — наш год под деревом." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ====================== ФИКСИРОВАННАЯ СЦЕНА (фон) ====================== -->
+    <div class="stage" aria-hidden="true">
+      <div class="sky"></div>
+      <div class="sun"></div>
+      <div class="light-overlay"></div>
+
+      <div class="layer layer--clouds" data-depth="0.15"></div>
+      <div class="layer layer--hills-far" data-depth="0.35"></div>
+      <div class="layer layer--house" data-depth="0.5"></div>
+      <div class="layer layer--hills-near" data-depth="0.7"></div>
+
+      <!-- земля создаётся в ground.js; дерево + пара -->
+      <div class="tree-wrap" data-depth="1">
+        <div id="tree"></div>
+        <div class="couple"></div>
+        <div class="cake"></div>
+      </div>
+
+      <canvas class="particles" id="particles"></canvas>
+      <div class="vignette"></div>
+    </div>
+
+    <!-- шаблон диалогового окна (портрет + табличка имени слева, текст справа) -->
+    <template id="dialog-tpl">
+      <div class="dialog">
+        <div class="dialog-portrait">
+          <img src="photos/portrait-face.webp" alt="Асылхан" />
+          <div class="dialog-name">Асылхан</div>
+        </div>
+        <div class="dialog-box">
+          <p class="dialog-text"></p>
+          <span class="dialog-next">▾</span>
+        </div>
+      </div>
+    </template>
+
+    <!-- ====================== КОНТЕНТ ====================== -->
+    <main class="content">
+      <!-- S1 — Рассвет / Пролог -->
+      <section
+        class="scene scene--intro"
+        id="s1"
+        data-season="dawn"
+        data-dialog="Привет, Нурдана. Я Асылхан — твой парень, если что.|Сегодня мой самый прекрасный день. Твой, конечно, тоже — но больше мой.|Ведь сегодня на свет появилась ты. А в переводе — появилось моё счастье.|Я так счастлив, что повстречал тебя, солнышко моё."
+      >
+        <div class="intro-block">
+          <p class="intro-kicker">Наш год</p>
+          <h1 class="title-pixel hero-name" data-split>С днём рождения,<br /><span class="accent">Нурдана</span></h1>
+          <p class="intro-sub">маленькая история про нас — под одним деревом</p>
+          <div class="scroll-hint" aria-hidden="true"><span>листай вниз</span><span class="arrow">↓</span></div>
+        </div>
+      </section>
+
+      <!-- S2 — Весна -->
+      <section
+        class="scene scene--chapter"
+        id="s2"
+        data-season="spring"
+        data-dialog="Тогда всё только начиналось.|Я только начал узнавать тебя — твою улыбку, твой взгляд, твою теплоту и доброту.|Твою нежность и красоту.|Я просто был счастлив находиться рядом с тобой.|А вон то, последнее фото — это уже наш второй год вместе. 💛"
+      >
+        <div class="chapter-head">
+          <h2 class="title-pixel">Наши совместные фотографии</h2>
+        </div>
+        <div class="polaroids" data-photos="spring">
+          <figure class="polaroid polaroid--morph" data-slug="spring-1">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Весна 1" loading="lazy" /><img class="img-anime" alt="Весна 1 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid polaroid--morph" data-slug="spring-2">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Весна 2" loading="lazy" /><img class="img-anime" alt="Весна 2 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid polaroid--morph" data-slug="spring-3">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Весна 3" loading="lazy" /><img class="img-anime" alt="Весна 3 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid polaroid--morph" data-slug="spring-4">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Весна 4" loading="lazy" /><img class="img-anime" alt="Весна 4 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- S3 — Лето -->
+      <section
+        class="scene scene--chapter"
+        id="s3"
+        data-season="summer"
+        data-dialog="Мне было тяжело без тебя — целых три месяца лета.|Я ждал тебя очень долго, очень сильно скучал. Было трудно.|Но я всегда знал: если я всё это преодолею — то в итоге встречусь с тобой.|И это будет моя самая желанная награда."
+      >
+        <div class="chapter-head">
+          <h2 class="title-pixel">Лето</h2>
+          <p class="chapter-sub">три месяца врозь</p>
+        </div>
+        <div class="polaroids" data-photos="nurdana">
+          <figure class="polaroid">
+            <div class="pin"></div>
+            <div class="frame"><img src="photos/nurdana-1.webp" alt="Нурдана" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid">
+            <div class="pin"></div>
+            <div class="frame"><img src="photos/nurdana-2.webp" alt="Нурдана" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid">
+            <div class="pin"></div>
+            <div class="frame"><img src="photos/nurdana-3.webp" alt="Нурдана" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- S4 — Осень (морф фото -> аниме) -->
+      <section
+        class="scene scene--chapter"
+        id="s4"
+        data-season="autumn"
+        data-dialog="Осень. Я смотрю на эти фото —|и вижу тебя будто в сказке, в тёплом нарисованном мире.|Вот так ты выглядишь, когда я думаю о тебе."
+      >
+        <div class="chapter-head">
+          <h2 class="title-pixel">Осень</h2>
+          <p class="chapter-sub">вот как я тебя вижу</p>
+        </div>
+        <div class="polaroids polaroids--morph" data-photos="autumn">
+          <figure class="polaroid polaroid--morph" data-slug="autumn-1">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Осень 1" loading="lazy" /><img class="img-anime" alt="Осень 1 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid polaroid--morph" data-slug="autumn-2">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Осень 2" loading="lazy" /><img class="img-anime" alt="Осень 2 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+          <figure class="polaroid polaroid--morph" data-slug="autumn-3">
+            <div class="pin"></div>
+            <div class="frame"><img class="img-real" alt="Осень 3" loading="lazy" /><img class="img-anime" alt="Осень 3 (аниме)" loading="lazy" /></div>
+          <figcaption></figcaption></figure>
+        </div>
+      </section>
+
+      <!-- S5 — Зима -->
+      <section
+        class="scene scene--chapter"
+        id="s5"
+        data-season="winter"
+        data-dialog="Каждый наш день я бы прожил заново — лишь бы рядом была ты.|Помнишь эти дни? Я помню каждый."
+      >
+        <div class="winter-row">
+          <div class="polaroids" data-photos="winter">
+            <figure class="polaroid polaroid--morph" data-slug="winter-1">
+              <div class="pin"></div>
+              <div class="frame"><img class="img-real" alt="Зима" loading="lazy" /><img class="img-anime" alt="Зима (аниме)" loading="lazy" /></div>
+            <figcaption></figcaption></figure>
+          </div>
+          <div class="message">
+            <p class="msg-line">Мы были вместе. Виделись каждый день.</p>
+            <p class="msg-line">И каждый из этих дней я был рад провести с тобой.</p>
+            <p class="msg-line">Ты понимаешь, какая это награда — выходить с тобой гулять и просто быть рядом.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- S6 — День рождения (ЛЕТО) -->
+      <section
+        class="scene scene--finale"
+        id="s6"
+        data-season="birthday"
+        data-dialog="И вот снова лето — твой день рождения.|Круг замкнулся: целый наш год под одним деревом.|С днём рождения, Нурдана. Ты — моё любимое время года. 🌻"
+      >
+        <div class="finale-block">
+          <h2 class="title-pixel finale-title">С Днём Рождения,<br /><span class="accent">Нурдана</span>!</h2>
+
+          <div class="gift">
+            <button class="gift-btn" id="press-me" type="button" aria-haspopup="dialog" aria-controls="bigmodal">✨ Нажми меня</button>
+          </div>
+
+          <div class="chest-area">
+            <button class="chest" id="chest" type="button" aria-expanded="false" aria-controls="chest-cards">
+              <div class="chest-lid"></div>
+              <div class="chest-body"></div>
+              <span class="chest-label">Капсула воспоминаний</span>
+            </button>
+            <ul class="chest-cards" id="chest-cards" hidden>
+              <li><a class="memory-card" href="https://facesplit.github.io/march8/" target="_blank" rel="noopener">🌷 8 марта</a></li>
+              <li><a class="memory-card" href="https://facesplit.github.io/NURDANA/" target="_blank" rel="noopener">💌 14 февраля</a></li>
+              <li><a class="memory-card" href="https://facesplit.github.io/year/" target="_blank" rel="noopener">💞 Год отношений</a></li>
+              <li><a class="memory-card" href="https://www.canva.com/design/DAGpT1zXmFc/PW_IT8bHP-QXxQQ5WaSObw/view" target="_blank" rel="noopener">🎞 Презентация (Canva)</a></li>
+            </ul>
+          </div>
+
+          <p class="finale-foot">круг замкнулся — и снова лето 🌻</p>
+        </div>
+      </section>
+    </main>
+
+    <button class="mute-btn" id="mute" type="button" aria-label="Включить/выключить музыку" hidden>♪</button>
+
+    <!-- Большое окно-поздравление (раскрывается снизу в центр) -->
+    <div class="bigmodal" id="bigmodal" hidden role="dialog" aria-modal="true" aria-label="Поздравление">
+      <div class="bigmodal-card">
+        <div class="bigmodal-text">
+          <p class="bm-title">С Днём Рождения, Нурдана! 🌻</p>
+          <p>Целый год мы прошли вместе — весна, лето, осень, зима… и снова лето, твоё лето.</p>
+          <p>Каждое время года было особенным — просто потому, что рядом была ты.</p>
+          <p>И знаешь, что я понял за этот год? Моё любимое время года — это не весна и не лето.</p>
+          <p class="bm-accent">Моё любимое время года — это ты, Нурдана.</p>
+          <p class="bm-accent">Я люблю тебя. 💛</p>
+        </div>
+        <button class="bigmodal-close" type="button">Закрыть</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

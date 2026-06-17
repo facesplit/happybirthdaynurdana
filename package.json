@@ -1,0 +1,26 @@
+{
+  "name": "birthday-tree-scrolly",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Наш год под деревом — birthday scrollytelling site (Stardew-style)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "photos": "node scripts/process-photos.js",
+    "sprites": "node scripts/fetch-sprites.js",
+    "couples": "node scripts/process-couples.js",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "sharp": "^0.33.5",
+    "vite": "^6.0.0"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "lenis": "^1.1.18"
+  }
+}

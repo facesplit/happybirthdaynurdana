@@ -1,0 +1,1116 @@
+/* ====================================================================
+   Наш год под деревом — стили (cozy pixel / Stardew-like)
+   ==================================================================== */
+
+:root {
+  /* тёплая Stardew-палитра */
+  --cream: #f7ecd9;
+  --peach: #f4c89b;
+  --rose: #e9a7a7;
+  --rose-deep: #d98a8a;
+  --gold: #e8c06a;
+  --green: #8fb070;
+  --green-deep: #5e7d4f;
+  --brown: #7a5230;
+  --ink: #4a3b32;
+
+  /* динамические переменные сцены — их крутит JS по скроллу */
+  --sky-top: #1a1a3a;
+  --sky-bot: #5a3a5a;
+  --foliage: #8fb070;
+  --foliage-2: #6f8f57;
+  --blossom: 0; /* 0..1 — цветение */
+  --snowcap: 0; /* 0..1 — иней/снег на дереве */
+  --light: 0.18; /* интенсивность тёплого света */
+  --sun-y: 78%;
+  --sun-op: 0;
+  --house-light: 0;
+
+  --pixel: 'Pixelify Sans', system-ui, sans-serif;
+  --body: 'Nunito', system-ui, sans-serif;
+
+  /* тёмный пиксельный контур — чтобы светлый текст читался на любом фоне */
+  --txt-outline: 1px 1px 0 #3a2a20, -1px 1px 0 #3a2a20, 1px -1px 0 #3a2a20,
+    -1px -1px 0 #3a2a20, 0 2px 3px rgba(0, 0, 0, 0.45);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #14122a;
+  color: var(--ink);
+  font-family: var(--body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body { width: 100%; }
+
+img { image-rendering: auto; }
+
+/* ===================== ФИКСИРОВАННАЯ СЦЕНА ===================== */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 100%);
+  transition: background 120ms linear;
+}
+
+/* солнце/луна */
+.sun {
+  position: absolute;
+  left: 50%;
+  top: var(--sun-y);
+  width: 22vmin;
+  height: 22vmin;
+  margin-left: -11vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff4cf 0%, #ffd98a 55%, rgba(255, 200, 120, 0) 72%);
+  opacity: var(--sun-op);
+  filter: blur(2px);
+}
+
+/* тёплый свет поверх сцены */
+.light-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 30%, rgba(255, 214, 150, var(--light)), transparent 70%);
+  mix-blend-mode: soft-light;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(20, 12, 30, 0.45) 100%);
+}
+
+/* слои параллакса (силуэты рисуются background'ом / SVG mask'ой) */
+.layer {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 0;
+  background-repeat: repeat-x;
+  background-position: bottom center;
+  will-change: transform;
+}
+
+.layer--clouds {
+  top: 6%;
+  height: 30vh;
+  opacity: 0.85;
+  background-image:
+    radial-gradient(40px 18px at 12% 40%, rgba(255, 255, 255, 0.85), transparent 70%),
+    radial-gradient(60px 24px at 30% 55%, rgba(255, 255, 255, 0.7), transparent 70%),
+    radial-gradient(50px 20px at 62% 35%, rgba(255, 255, 255, 0.8), transparent 70%),
+    radial-gradient(70px 26px at 85% 50%, rgba(255, 255, 255, 0.65), transparent 70%);
+  background-size: 100% 100%;
+}
+
+.layer--hills-far {
+  height: 32vh;
+  background:
+    radial-gradient(60% 100% at 20% 100%, var(--green-deep) 0 60%, transparent 61%),
+    radial-gradient(70% 100% at 70% 100%, var(--green-deep) 0 60%, transparent 61%);
+  opacity: 0.55;
+  filter: saturate(0.8);
+}
+
+.layer--hills-near {
+  height: 22vh;
+  background:
+    radial-gradient(80% 100% at 35% 100%, var(--green) 0 70%, transparent 71%),
+    radial-gradient(90% 100% at 80% 100%, var(--green) 0 70%, transparent 71%);
+}
+
+/* домик вдалеке с тёплыми окошками */
+.layer--house {
+  height: 26vh;
+}
+.layer--house::after {
+  content: '';
+  position: absolute;
+  right: 16%;
+  bottom: 9vh;
+  width: 84px;
+  height: 64px;
+  background:
+    /* окно */
+    linear-gradient(rgba(255, 210, 120, var(--house-light)), rgba(255, 210, 120, var(--house-light))) 18px 26px / 16px 16px no-repeat,
+    /* стена */
+    var(--brown);
+  border: 3px solid #5c3e22;
+  border-radius: 3px;
+  box-shadow: 0 -28px 0 -8px transparent;
+}
+.layer--house::before {
+  content: '';
+  position: absolute;
+  right: 15.2%;
+  bottom: calc(9vh + 58px);
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 30px solid #8a4b2c;
+}
+
+/* ===================== ЗЕМЛЯ + ТРАВА ===================== */
+.ground {
+  position: absolute;
+  left: -2%;
+  right: -2%;
+  bottom: 0;
+  height: 22vh;
+  background: linear-gradient(180deg, var(--ground-far, #5e8c48) 0%, var(--ground, #7faf5e) 32%);
+  box-shadow: inset 0 5px 0 rgba(255, 255, 255, 0.1);
+  transition: background 150ms linear;
+}
+/* пиксельный «ворс» травы поверх цветной земли (генерится в ground.js) */
+.ground-tex {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  background-size: 64px 64px;
+  image-rendering: pixelated;
+  transition: opacity 0.4s;
+}
+/* снежный покров зимой */
+.ground-snow {
+  position: absolute;
+  left: 0; right: 0; top: -4px;
+  height: 46%;
+  background: linear-gradient(180deg, #ffffff 0%, #eef4fa 70%, rgba(238, 244, 250, 0) 100%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+/* кустики травы Stardew (сезонные), раскидываются JS вдоль земли */
+.grass-tufts {
+  position: absolute;
+  left: 0; right: 0; bottom: 2vh;
+  height: 90px;
+  pointer-events: none;
+  z-index: 2; /* трава перед домом, но ПОД деревом/парой */
+}
+.grass-tufts img {
+  position: absolute;
+  bottom: 0;
+  image-rendering: pixelated;
+  opacity: var(--grass-op, 1);
+  transition: opacity 0.4s;
+  transform-origin: bottom center;
+  animation: tuft-sway 4.5s ease-in-out infinite;
+}
+@keyframes tuft-sway {
+  0%, 100% { transform: rotate(-3deg) scaleX(var(--fx, 1)); }
+  50% { transform: rotate(3deg) scaleX(var(--fx, 1)); }
+}
+
+/* ===================== ДЕРЕВО ===================== */
+.tree-wrap {
+  position: absolute;
+  left: 50%;
+  bottom: 9vh;
+  width: min(68vmin, 600px);
+  height: min(86vmin, 760px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 3; /* дерево и пара ПОВЕРХ травы/дома, чтобы пару не обрезало */
+}
+
+#tree {
+  width: 100%;
+  height: 100%;
+}
+#tree svg { width: 100%; height: 100%; display: block; }
+
+/* спрайт-дерево Stardew: 4 сезонных кадра, кроссфейд */
+.sprite-tree {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sprite-tree img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom center;
+  image-rendering: pixelated;
+  transition: opacity 0.15s linear;
+  filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.25));
+}
+
+/* пара под деревом (меньше дерева — правильный масштаб) */
+.couple {
+  position: absolute;
+  bottom: 1%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 60px;
+  background: no-repeat center bottom / contain;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.3));
+  z-index: 4;
+}
+/* сезонные спрайты пары (Stardew) — кроссфейд */
+.couple.has-sprite {
+  width: clamp(78px, 13vmin, 124px);
+  height: auto;
+}
+.couple.has-sprite img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  image-rendering: pixelated;
+  transition: opacity 0.18s linear;
+}
+
+/* торт со свечками — появляется в финале */
+.cake {
+  position: absolute;
+  bottom: 2%;
+  left: calc(50% + 70px);
+  width: 46px;
+  height: 46px;
+  opacity: 0;
+  transform: translateY(8px) scale(0.8);
+  transition: opacity 0.4s, transform 0.4s;
+  background: no-repeat center / contain;
+}
+.cake.show { opacity: 1; transform: translateY(0) scale(1); }
+
+/* ===================== ЧАСТИЦЫ ===================== */
+.particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===================== КОНТЕНТ ===================== */
+.content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14vh 20px;
+  text-align: center;
+}
+
+/* пиксельные заголовки */
+.title-pixel {
+  font-family: var(--pixel);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--cream);
+  text-shadow:
+    -2px -2px 0 #3a2a20, 2px -2px 0 #3a2a20, -2px 2px 0 #3a2a20, 2px 2px 0 #3a2a20,
+    0 4px 0 #2a1d15, 0 0 16px rgba(255, 210, 150, 0.3);
+  margin: 0;
+}
+.accent { color: var(--rose); }
+
+/* --- S1 интро --- */
+.intro-block { display: grid; gap: 18px; justify-items: center; }
+.intro-kicker {
+  font-family: var(--pixel);
+  letter-spacing: 2px;
+  color: var(--peach);
+  margin: 0;
+  font-size: clamp(12px, 2.5vw, 16px);
+  text-shadow: var(--txt-outline);
+}
+.hero-name { font-size: clamp(28px, 8vw, 72px); }
+.intro-sub {
+  font-size: clamp(14px, 3vw, 20px);
+  color: var(--cream);
+  max-width: 30ch;
+  margin: 0;
+  text-shadow: var(--txt-outline);
+}
+.scroll-hint {
+  margin-top: 24px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  font-family: var(--pixel);
+  font-size: 12px;
+  color: var(--cream);
+  text-shadow: var(--txt-outline);
+}
+.scroll-hint .arrow {
+  font-size: 22px;
+  animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+
+/* --- заголовки глав --- */
+.chapter-head { margin-bottom: 6vh; display: grid; gap: 6px; }
+.chapter-head .title-pixel { font-size: clamp(26px, 6vw, 54px); }
+.chapter-sub {
+  font-family: var(--body);
+  font-weight: 800;
+  color: var(--cream);
+  font-size: clamp(14px, 3vw, 20px);
+  margin: 0;
+  text-shadow: var(--txt-outline);
+}
+.summer-note {
+  font-family: var(--pixel);
+  color: var(--cream);
+  font-size: clamp(14px, 2.6vw, 20px);
+  text-align: center;
+  max-width: 24ch;
+  margin: 0;
+  text-shadow: var(--txt-outline);
+}
+
+/* --- полароиды --- */
+.polaroids {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(16px, 4vw, 42px);
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1100px;
+  padding-top: 54px; /* место под верёвку */
+}
+/* верёвка-clothesline: пиксельный канат на ВСЮ ширину экрана (от края до края) */
+.polaroids::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  height: 7px;
+  background: repeating-linear-gradient(90deg, #8a5a32 0 5px, #6e4527 5px 10px);
+  border-radius: 4px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+  border-top: 1px solid #a4703f;
+}
+
+.polaroid {
+  --tilt: -3deg;
+  position: relative;
+  margin: 0;
+  width: clamp(160px, 26vw, 240px);
+  background: #fffaf0;
+  padding: 12px 12px 0;
+  border-radius: 4px;
+  box-shadow: 0 10px 22px rgba(40, 24, 16, 0.35);
+  transform: rotate(var(--tilt));
+  transform-origin: top center;
+  animation: sway 5s ease-in-out infinite;
+  image-rendering: pixelated;
+}
+.polaroid:nth-child(2n) { --tilt: 3deg; animation-delay: -1.2s; }
+.polaroid:nth-child(3n) { --tilt: -1.5deg; animation-delay: -2.4s; }
+@keyframes sway {
+  0%, 100% { transform: rotate(var(--tilt)); }
+  50% { transform: rotate(calc(var(--tilt) * -0.4)); }
+}
+
+/* прищепка-клипса на верёвке */
+.pin {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 12px;
+  height: 18px;
+  margin-left: -6px;
+  background: var(--rose-deep);
+  border-radius: 2px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  z-index: 2;
+}
+/* верёвочка от прищепки вверх к канату */
+.pin::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  width: 2px;
+  height: 42px;
+  margin-left: -1px;
+  background: #8a5a32;
+  transform-origin: bottom;
+}
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  background: #e8dcc8;
+  border-radius: 2px;
+  min-height: 60px;
+}
+/* реальное фото задаёт натуральные пропорции -> видно ЦЕЛИКОМ, без обрезки */
+.frame .img-real {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* аниме-версия лежит сверху тем же размером */
+.frame .img-anime {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* запасной вариант для одиночных img */
+.frame > img:only-child {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.polaroid figcaption {
+  font-family: var(--pixel);
+  font-size: 12px;
+  color: var(--ink);
+  padding: 10px 4px 14px;
+  word-break: break-word;
+}
+
+/* осенний морф фото -> аниме */
+.polaroid--morph .img-anime {
+  opacity: var(--morph, 0);
+  transition: opacity 0.2s linear;
+  filter: saturate(1.15) brightness(1.03);
+}
+.polaroid--morph .img-real { opacity: calc(1 - var(--morph, 0)); }
+
+/* --- S3 видео-воспоминание (телевизор) --- */
+.tv-memory { display: grid; gap: 16px; justify-items: center; }
+.tv-frame {
+  position: relative;
+  width: min(80vw, 640px);
+  aspect-ratio: 16 / 10;
+  background: #3a2a22;
+  border: 10px solid #7a5230;
+  border-radius: 10px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4), inset 0 0 0 4px #5c3e22;
+  overflow: hidden;
+}
+.memory-video { width: 100%; height: 100%; object-fit: cover; display: block; background: #1c1410; }
+.play-btn {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 84px;
+  height: 84px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(233, 167, 167, 0.92);
+  box-shadow: 0 6px 0 var(--rose-deep);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.15s;
+}
+.play-btn:hover { transform: scale(1.06); }
+.play-btn.hidden { display: none; }
+.play-tri {
+  width: 0; height: 0;
+  border-left: 26px solid #fff;
+  border-top: 16px solid transparent;
+  border-bottom: 16px solid transparent;
+  margin-left: 6px;
+}
+.tv-caption {
+  font-family: var(--pixel);
+  color: var(--cream);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* --- S5 зимнее послание --- */
+.winter-row {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 4vw, 40px);
+  align-items: center;
+  justify-content: center;
+  max-width: 980px;
+}
+.message { display: grid; gap: 16px; text-align: left; max-width: 30ch; }
+.msg-line {
+  font-family: var(--body);
+  font-weight: 800;
+  font-size: clamp(16px, 3vw, 24px);
+  color: var(--cream);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(14px);
+  text-shadow: var(--txt-outline);
+}
+
+/* --- S6 финал --- */
+.scene--finale { gap: 36px; }
+.finale-block { display: grid; gap: 30px; justify-items: center; }
+.finale-title { font-size: clamp(28px, 7vw, 64px); }
+
+.gift { display: grid; gap: 16px; justify-items: center; }
+.gift-btn, .gift-video-wrap { width: min(80vw, 520px); }
+.gift-btn {
+  font-family: var(--pixel);
+  font-size: 16px;
+  color: #fff;
+  background: var(--rose);
+  border: 4px solid #fff;
+  box-shadow: 0 6px 0 var(--rose-deep);
+  border-radius: 8px;
+  padding: 14px 22px;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.gift-btn:hover { transform: translateY(-2px); }
+.gift-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--rose-deep); }
+.gift-video-wrap {
+  aspect-ratio: 16 / 10;
+  border: 8px solid #7a5230;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* сундук */
+.chest-area { display: grid; gap: 22px; justify-items: center; }
+.chest {
+  position: relative;
+  width: 150px;
+  height: 120px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+}
+.chest-body {
+  position: absolute;
+  bottom: 18px;
+  width: 130px;
+  height: 70px;
+  background: linear-gradient(#9a6a3a, #7a5230);
+  border: 4px solid #5c3e22;
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 0 0 3px #b98a52;
+}
+.chest-body::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 18px;
+  width: 16px;
+  height: 20px;
+  margin-left: -8px;
+  background: var(--gold);
+  border: 3px solid #8a6a2a;
+  border-radius: 3px;
+}
+.chest-lid {
+  position: absolute;
+  bottom: 78px;
+  width: 134px;
+  height: 40px;
+  background: linear-gradient(#a9794a, #8a5e36);
+  border: 4px solid #5c3e22;
+  border-radius: 10px 10px 0 0;
+  transform-origin: bottom center;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chest[aria-expanded='true'] .chest-lid { transform: rotateX(58deg) translateY(-6px); }
+.chest-label {
+  position: absolute;
+  bottom: -6px;
+  font-family: var(--pixel);
+  font-size: 12px;
+  color: var(--cream);
+  white-space: nowrap;
+}
+.chest:hover .chest-lid { transform: rotateX(20deg); }
+
+/* спрайт-сундук Stardew: прячем CSS-арт, показываем настоящий спрайт */
+.chest.has-sprite { width: 120px; height: 150px; }
+.chest.has-sprite .chest-lid,
+.chest.has-sprite .chest-body { display: none; }
+.chest.has-sprite .chest-sprite {
+  width: 100%;
+  height: 120px;
+  image-rendering: pixelated;
+  object-fit: contain;
+  object-position: bottom center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 6px 5px rgba(0, 0, 0, 0.3));
+}
+.chest.has-sprite:hover .chest-sprite { transform: translateY(-4px) scale(1.05); }
+.chest.has-sprite[aria-expanded='true'] .chest-sprite { transform: translateY(-2px) scale(1.08); }
+
+/* спрайт-дом в дальнем слое (с сезонным снегом и светящимся окном) */
+.layer--house.has-sprite::before,
+.layer--house.has-sprite::after { display: none; }
+.house {
+  position: absolute;
+  right: 4%;
+  bottom: 11vh;
+  width: clamp(240px, 34vw, 460px);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 14px 12px rgba(0, 0, 0, 0.34));
+  z-index: 1;
+}
+.house img { width: 100%; display: block; image-rendering: pixelated; }
+/* снег на крыше зимой */
+.house .house-snow {
+  position: absolute;
+  left: 4%; right: 4%; top: 2%;
+  height: 34%;
+  background: linear-gradient(#ffffff, rgba(255, 255, 255, 0.85));
+  clip-path: polygon(50% 0, 100% 56%, 100% 100%, 0 100%, 0 56%);
+  opacity: var(--house-snow, 0);
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+/* тёплое свечение окна */
+.house .house-glow {
+  position: absolute;
+  left: 50%; top: 52%;
+  width: 22%; height: 16%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255, 214, 130, 0.95), rgba(255, 214, 130, 0) 70%);
+  opacity: var(--house-light, 0);
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .house { right: 2%; bottom: 16vh; width: 130px; }
+}
+
+/* спрайт-цветы вдоль земли */
+.ground-flowers {
+  position: absolute;
+  left: 0; right: 0; bottom: 4vh;
+  height: 60px;
+  pointer-events: none;
+  z-index: 2;
+}
+.ground-flowers img {
+  position: absolute;
+  bottom: 0;
+  width: clamp(26px, 4vw, 40px);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.2));
+  opacity: var(--flowers-op, 0);
+  transition: opacity 0.4s;
+}
+
+.chest-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  max-width: 640px;
+}
+.chest-cards[hidden] { display: none; }
+.memory-card {
+  display: inline-block;
+  font-family: var(--pixel);
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--cream);
+  border: 3px solid var(--brown);
+  box-shadow: 0 5px 0 var(--brown);
+  border-radius: 6px;
+  padding: 12px 16px;
+  transition: transform 0.14s;
+}
+.memory-card:hover { transform: translateY(-6px); }
+
+.finale-foot {
+  font-family: var(--pixel);
+  color: var(--cream);
+  font-size: 14px;
+  text-shadow: var(--txt-outline);
+}
+
+/* ===================== ДИАЛОГОВОЕ ОКНО (Stardew) ===================== */
+.dialog {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.dialog--fixed {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translate(-50%, 24px);
+  width: min(92vw, 680px);
+  z-index: 8;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.dialog--fixed.show { opacity: 1; transform: translate(-50%, 0); }
+
+.dialog-box {
+  position: relative;
+  flex: 1;
+  min-height: 78px;
+  background: #fbeecb;
+  border: 4px solid #c5763a;
+  border-radius: 8px;
+  box-shadow:
+    inset 0 0 0 3px #f6d9a0,
+    inset 0 0 0 7px #c5763a,
+    0 6px 0 rgba(120, 70, 30, 0.35),
+    0 10px 24px rgba(0, 0, 0, 0.3);
+  padding: 16px 20px;
+  color: #5a3b22;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.dialog-text {
+  font-family: var(--pixel);
+  font-size: clamp(13px, 2.2vw, 17px);
+  line-height: 1.5;
+  margin: 0;
+  min-height: 1.5em;
+  letter-spacing: 0.3px;
+}
+.dialog-text.typing::after {
+  content: '▮';
+  margin-left: 1px;
+  animation: caret 0.7s steps(1) infinite;
+}
+@keyframes caret { 50% { opacity: 0; } }
+.dialog-next {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  font-size: 16px;
+  color: #c5763a;
+  opacity: 0;
+  animation: bob 1.2s ease-in-out infinite;
+}
+.dialog[data-has-next='1'] .dialog-box.done .dialog-next { opacity: 1; }
+
+/* портрет + табличка имени снизу */
+.dialog-portrait {
+  flex: 0 0 auto;
+  width: clamp(78px, 13vw, 110px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.dialog-portrait img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 3px solid #c5763a;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px #f6d9a0, 0 4px 6px rgba(0, 0, 0, 0.35);
+  image-rendering: auto;
+}
+.dialog-name {
+  width: 100%;
+  text-align: center;
+  font-family: var(--pixel);
+  font-size: clamp(10px, 1.5vw, 13px);
+  color: #5a3b22;
+  background: #f6d9a0;
+  border: 2px solid #c5763a;
+  border-radius: 5px;
+  padding: 3px 4px;
+  box-shadow: 0 3px 0 rgba(120, 70, 30, 0.3);
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .dialog-portrait { width: 66px; }
+  .dialog--fixed { bottom: 10px; }
+}
+
+/* музыкальный плеер */
+.player {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: min(86vw, 360px);
+  padding: 6px 10px;
+  background: rgba(74, 59, 50, 0.86);
+  border: 3px solid var(--cream);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+.player[hidden] { display: none; }
+.pl-btn {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--cream);
+  border-radius: 7px;
+  background: var(--rose);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.1s;
+}
+.pl-btn:hover { transform: translateY(-2px); }
+.pl-btn:active { transform: translateY(1px); }
+.pl-title {
+  font-family: var(--pixel);
+  color: var(--cream);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+.player.pl-missing .pl-title { color: #f0b8b8; }
+@media (max-width: 640px) {
+  .player { right: 8px; bottom: 8px; padding: 5px 8px; }
+  .pl-title { max-width: 120px; font-size: 11px; }
+}
+
+/* анимация появления карточек из сундука */
+@keyframes pop-in {
+  0% { opacity: 0; transform: translateY(20px) scale(0.6); }
+  70% { transform: translateY(-6px) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.chest-cards li { animation: pop-in 0.5s backwards; }
+.chest-cards li:nth-child(2) { animation-delay: 0.08s; }
+.chest-cards li:nth-child(3) { animation-delay: 0.16s; }
+.chest-cards li:nth-child(4) { animation-delay: 0.24s; }
+
+/* ===================== БОЛЬШОЕ ОКНО-ПОЗДРАВЛЕНИЕ ===================== */
+.bigmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 32;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(20, 12, 30, 0);
+  transition: background 0.35s ease;
+}
+.bigmodal[hidden] { display: none; }
+.bigmodal.show { background: rgba(20, 12, 30, 0.78); }
+
+.bigmodal-card {
+  width: min(94vw, 620px);
+  max-height: 86vh;
+  overflow: auto;
+  background: #fbeecb;
+  border: 5px solid #c5763a;
+  border-radius: 14px;
+  box-shadow:
+    inset 0 0 0 4px #f6d9a0, inset 0 0 0 9px #c5763a,
+    0 18px 50px rgba(0, 0, 0, 0.5);
+  padding: clamp(22px, 5vw, 44px);
+  text-align: center;
+  color: #5a3b22;
+  /* старт: маленькое снизу */
+  transform: translateY(42vh) scale(0.55);
+  opacity: 0;
+  transition: transform 0.5s cubic-bezier(0.22, 1.1, 0.36, 1), opacity 0.4s ease;
+}
+.bigmodal.show .bigmodal-card { transform: translateY(0) scale(1); opacity: 1; }
+
+.bigmodal-text p {
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: clamp(15px, 2.6vw, 20px);
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+.bigmodal-text .bm-title {
+  font-family: var(--pixel);
+  font-weight: 700;
+  font-size: clamp(20px, 4.5vw, 34px);
+  color: var(--rose-deep);
+  margin-bottom: 20px;
+}
+.bigmodal-text .bm-accent { color: var(--rose-deep); font-size: clamp(16px, 3vw, 22px); }
+.bigmodal-close {
+  margin-top: 14px;
+  font-family: var(--pixel);
+  font-size: clamp(13px, 2vw, 16px);
+  color: #fff;
+  background: var(--rose);
+  border: 3px solid #fff;
+  box-shadow: 0 5px 0 var(--rose-deep);
+  border-radius: 8px;
+  padding: 11px 26px;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.bigmodal-close:hover { transform: translateY(-2px); }
+.bigmodal-close:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--rose-deep); }
+
+/* ===================== ЛАЙТБОКС (фото целиком) ===================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 12, 30, 0.82);
+  opacity: 0;
+  transition: opacity 0.25s;
+  cursor: zoom-out;
+  padding: 20px;
+}
+.lightbox.show { opacity: 1; }
+.lightbox[hidden] { display: none; }
+.lb-inner { margin: 0; display: grid; gap: 10px; justify-items: center; max-width: 92vw; }
+.lb-img {
+  max-width: 88vw;
+  max-height: 76vh;
+  border: 8px solid #fffaf0;
+  border-radius: 4px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5);
+  background: #fffaf0;
+  cursor: pointer;
+}
+.lb-cap { font-family: var(--pixel); color: var(--cream); font-size: clamp(12px, 2.4vw, 18px); text-align: center; }
+.lb-hint { font-family: var(--body); color: rgba(247, 236, 217, 0.6); font-size: 12px; }
+
+/* ===================== ТОСТ (желание и т.п.) ===================== */
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, -10px);
+  z-index: 25;
+  background: rgba(74, 59, 50, 0.92);
+  color: var(--cream);
+  font-family: var(--pixel);
+  font-size: clamp(13px, 2.4vw, 18px);
+  padding: 12px 20px;
+  border: 3px solid var(--cream);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* свет в окне дома по клику (пасхалка) */
+.house.egg-lit .house-glow { opacity: 1 !important; }
+.house { cursor: pointer; pointer-events: auto; }
+.couple, .tree-wrap, .cake { pointer-events: auto; }
+
+/* ===================== ПАДАЮЩАЯ ЗВЕЗДА ===================== */
+.shooting-star {
+  position: fixed;
+  left: var(--sx, 20vw);
+  top: var(--sy, 12vh);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbe6, #ffe9a0 60%, rgba(255, 233, 160, 0));
+  box-shadow: 0 0 12px 4px rgba(255, 240, 180, 0.8);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 5;
+}
+.shooting-star::after {
+  content: '';
+  position: absolute;
+  right: 6px;
+  top: 3px;
+  width: 90px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(255, 240, 180, 0), rgba(255, 240, 180, 0.9));
+  transform: rotate(18deg);
+  transform-origin: right center;
+}
+.shooting-star.fly { animation: shoot 2.4s ease-in forwards; }
+@keyframes shoot {
+  0% { opacity: 0; transform: translate(0, 0); }
+  10% { opacity: 1; }
+  100% { opacity: 0; transform: translate(46vw, 30vh); }
+}
+
+/* ===================== АДАПТИВ ===================== */
+@media (max-width: 640px) {
+  .scene { padding: 12vh 14px; }
+  /* дерево по центру, пропорции под телефон */
+  .tree-wrap { width: min(78vmin, 360px); height: min(64vh, 520px); bottom: 9vh; }
+  .couple.has-sprite { width: clamp(64px, 20vmin, 96px); }
+  .house { right: 1%; bottom: 12vh; width: clamp(150px, 48vw, 240px); }
+  .winter-row { flex-direction: column; }
+  .message { text-align: center; }
+  .polaroid { width: clamp(150px, 62vw, 230px); }
+  /* полароиды в строках — переносятся, не наезжают */
+  .polaroids { gap: 16px; }
+  .chapter-head { margin-bottom: 4vh; }
+  /* диалог компактнее */
+  .dialog-box { min-height: 64px; padding: 12px 14px; }
+  .dialog-text { font-size: 14px; }
+  .ground { height: 18vh; }
+  .grass-tufts { bottom: 1vh; }
+}
+
+/* очень узкие экраны */
+@media (max-width: 380px) {
+  .hero-name { font-size: 26px; }
+  .house { width: 42vw; }
+  .tree-wrap { width: 84vmin; }
+}
+
+/* низкие/широкие (ландшафт телефона) — не давать сцене растягивать дерево */
+@media (max-height: 520px) {
+  .tree-wrap { height: 80vh; bottom: 6vh; }
+  .house { bottom: 14vh; }
+}
+
+/* ===================== REDUCED MOTION ===================== */
+@media (prefers-reduced-motion: reduce) {
+  .polaroid, .scroll-hint .arrow { animation: none !important; }
+  .sky { transition: none; }
+  html { scroll-behavior: auto; }
+}

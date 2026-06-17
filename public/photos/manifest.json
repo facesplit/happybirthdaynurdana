@@ -1,0 +1,50 @@
+{
+  "spring-1": {
+    "slug": "spring-1",
+    "original": "photos/spring-1.webp",
+    "lqip": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAABQBACdASoUAA8APu1iqU2ppaOiMAgBMB2JYgCdMoR3Ff/gGIVQ5NjegSloAP2cM0IeGNWOoMdRBKbud2g0UkdjW3ED4AR/k0iEWPQb0IE348xMv0n/aXUwxlGrEepa75KxU3M2I8S+B8r9aMZp7E5bqBkyGO2WyF2BiKiBe1NV45EEkoqKVy1qbw7kozvP6GxHKgaybvdcKAAA",
+    "anime": "photos/spring-1-anime.webp"
+  },
+  "spring-2": {
+    "slug": "spring-2",
+    "original": "photos/spring-2.webp",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQAwCdASoPABQAPu1iqU2ppaOiMAgBMB2JZwC2yBj57UxCaOfUMIAA/uwJgw97TiG+XBxHgJLi1GT07zRzhUaPMZ5OHRgHYL5Q17ZbC+PAdiu5vBtI3ab88oiMx0AGW/AYASU5DVjgm4bGevfsAAAA",
+    "anime": "photos/spring-2-anime.webp"
+  },
+  "spring-3": {
+    "slug": "spring-3",
+    "original": "photos/spring-3.webp",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoPABQAPu1iqU2ppaOiMAgBMB2JYwCdABn5y9rMLVvpXvoXgAD97Nppoq9xAgBreIjoWHKycc8GZ7m3e9iPJPfCuw5VMy4YpTNrMIayCazkgMc/oa0yrdLHYZiR3uOLSmso4tgV+tWYQAAA",
+    "anime": "photos/spring-3-anime.webp"
+  },
+  "spring-4": {
+    "slug": "spring-4",
+    "original": "photos/spring-4.webp",
+    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAACQBACdASoUAA8APu1iqU2ppaOiMAgBMB2JagCdL1yB30QXnLqJBgbmBqB20wAA/h7QctjDX1e6CqHHGkegy1EcuDznf4T2QVJxoI39iDfHRxQJDNP8D1GnkDtsaoeCSZmGwqi0cFTtoBRiKAf2f0/HQ6zH4pGEHidigoq4CUxV5rJYzzKqR5hPF5mqjTbtloowAA==",
+    "anime": "photos/spring-4-anime.webp"
+  },
+  "autumn-1": {
+    "slug": "autumn-1",
+    "original": "photos/autumn-1.webp",
+    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAAAwBACdASoUAAsAPu1iqk2ppaQiMAgBMB2JYwDCgCG7LoE1BCw31dms9AAA/uvi8VWRtpep4kEi6qaIDoepcoNGPVT4htij5DnmDtXjmM/fhQ2eJQBoig2BYfTD8DYOVR3f9//ecAA=",
+    "anime": "photos/autumn-1-anime.webp"
+  },
+  "autumn-2": {
+    "slug": "autumn-2",
+    "original": "photos/autumn-2.webp",
+    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAADwAwCdASoPABQAPu1iqU2ppaOiMAgBMB2JQBOgA0biU8nYLkf59mlAAOHcrZZGLey6PjTcDEcsWuLyO21EUX3BPIpFBabLiUVSW0PE8TC4iOVacibc6Rv5hxVg/W1JtyCiThy1HVYxOcFnowy9oPRaqMzK1wFPmJ74wdklV6TttljTMBn3LLcaXKHFaMb6YIg4AA==",
+    "anime": "photos/autumn-2-anime.webp"
+  },
+  "autumn-3": {
+    "slug": "autumn-3",
+    "original": "photos/autumn-3.webp",
+    "lqip": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAACwBACdASoUABEAPu1ur1IppiQiqAgBMB2JQBdmcg3/wC8Sk9GhEgMK3q/p3zoAAP6qOz75zaARrGXC5nBaVQoSXHSuuFBMB/fBklz7mScSVQH4/XTtBGdDIkEoqkSKiFoypNZ96ksBHsh5hzE4orqK17qduxTkhi3yL0cBABxTXGZBQfN2f87aKybmtOhHiAA=",
+    "anime": "photos/autumn-3-anime.webp"
+  },
+  "winter-1": {
+    "slug": "winter-1",
+    "original": "photos/winter-1.webp",
+    "lqip": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAABwBACdASoLABQAPu1iqU2ppaOiMAgBMB2JQBOgNPRP705R2L046Jt6idngAADKGJeKAEshaZKiPlUyRuHbmunU3yswvc3nrIUFcXgQelU7lu7KutabWgNR+Stb1121c0R6uturtSSOYAjqA1Hh6DEqzUPHmQb1/4pf9Ityf+S7yw9VIzb+EF6PiRILsz8Dp4WbEoAA",
+    "anime": "photos/winter-1-anime.webp"
+  }
+}
